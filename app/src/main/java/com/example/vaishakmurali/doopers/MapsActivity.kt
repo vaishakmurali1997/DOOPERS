@@ -1,6 +1,11 @@
 package com.example.vaishakmurali.doopers
 
+/**
+ * Created by vaishakmurali on 23/11/17.
+ */
+
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.location.Location
@@ -21,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_maps.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -131,37 +137,46 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             super.run()
             while (true){
                 try{
+                    // To check if the the location has been changed.
                     if(oldLocation!!.distanceTo(location)==0f){
                         continue
                     }
                     oldLocation=location
+                    // Note that thread can't run on UI so we have to use the function runOnUiThread.
                     runOnUiThread(){
-                        // Add a marker in Sydney and move the camera
+                        // Clearing the map and adding player's marker on the map.
                         mMap!!.clear()
-                        val sydney = LatLng(location!!.latitude,location!!.longitude)
+                        val playerLocation = LatLng(location!!.latitude,location!!.longitude)
                         mMap.addMarker(MarkerOptions()
-                                .position(sydney)
+                                .position(playerLocation)
                                 .title("You")
                                 .snippet("Here is your location & Your points : $player_points")
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.player))
                         )
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,15f))
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(playerLocation,15f))
 
                         // Show aliens
-                        for(i in 0..listOfAnimals.size-1){
-                        var alien = listOfAnimals[i]
-                        if(alien.IsReached == false){
+                        for(i in 0 until newAliens.size){
+                        val alien = newAliens[i]
+                        if(!alien.IsReached){
 
-                            var alienLocation = LatLng(alien.location!!.latitude!!,alien.location!!.longitude)
+                            // Setting location of the alien.
+                            val alienLocation = Location(Context.LOCATION_SERVICE)
+                            // Setting latitude and longitude
+                            alienLocation.latitude = alien.latitude
+                            alienLocation.longitude = alien.longitude
+
+                            // Setting alien marker on map.
                             mMap.addMarker(MarkerOptions()
-                                    .position(alienLocation)
+                                    .position(LatLng(alienLocation.latitude,alienLocation.longitude))
                                     .title(alien.name!!)
                                     .snippet(alien.description!!)
                                     .icon(BitmapDescriptorFactory.fromResource(alien.image!!)))
 
-                            if (location!!.distanceTo((alien.location))<2){
+                            // When player reaches the alien's location
+                            if (location!!.distanceTo((alienLocation))<2){
                                 alien.IsReached = true
-                                listOfAnimals[i] = alien
+                                newAliens[i] = alien
                                 player_points += alien.points!!
                                 Toast.makeText(applicationContext,"you have reached the location",Toast.LENGTH_LONG).show()
                             }
@@ -178,21 +193,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-    var player_points = 0
-    var listOfAnimals = ArrayList<animals>()
+    // variable to Count the player's points
+    var player_points: Int = 0
 
+    val newAliens = ArrayList<Animals>()
     fun loadAnimals(){
-        // loading all the aliens.
-        listOfAnimals.add(animals("Doggosaur", R.drawable.doggo,"This alien looks like dog. Holds 50 points.",
+
+        //TODO  Put random decimal input for longitude and latitude on alien's location
+        // Create new alien's using the animal data class.
+
+        newAliens.add(Animals ("Doggosaur", R.drawable.doggo,"This alien looks like a dog. Holds 50 points.",
                 50,18.532964,73.834206,false))
 
-        listOfAnimals.add(animals("Owlosaur", R.drawable.owl,"This alien looks like owl. Holds 110 points",
+        newAliens.add(Animals("Owlosaur", R.drawable.owl,"This alien looks like an owl. Holds 110 points",
                 150,18.525457,73.831927,false))
 
-        listOfAnimals.add(animals("Crocosaur", R.drawable.croco,"This alien looks like crocodile. Holds 150 points",
+        newAliens.add(Animals("Crocosaur", R.drawable.croco,"This alien looks like a crocodile. Holds 150 points",
                 150,18.526271,73.829995,false))
 
-        listOfAnimals.add(animals("Pandaosaur", R.drawable.pandu,"This alien looks like panda. It is very difficult to find him. Holds 650 points.",
+        newAliens.add(Animals("Pandaosaur", R.drawable.pandu,"This alien looks like a panda. It is very difficult to find him. Holds 650 points.",
                 650,18.0,73.5,false))
     }
 
