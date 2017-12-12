@@ -200,7 +200,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     fun loadAnimals(){
 
         //TODO  Put random decimal input for longitude and latitude on alien's location
-        // Create new alien's using the animal data class.
+        // Create new aliens using the animal data class.
 
         newAliens.add(Animals ("Doggosaur", R.drawable.doggo,"This alien looks like a dog. Holds 50 points.",
                 50,18.532964,73.834206,false))
