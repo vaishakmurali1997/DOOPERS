@@ -203,7 +203,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Create new aliens using the animal data class.
 
         newAliens.add(Animals ("Doggosaur", R.drawable.doggo,"This alien looks like a dog. Holds 50 points.",
-                50,18.532964,73.834206,false))
+                50,18.557346,73.809171,false))
 
         newAliens.add(Animals("Owlosaur", R.drawable.owl,"This alien looks like an owl. Holds 110 points",
                 150,18.525457,73.831927,false))
