@@ -206,10 +206,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 50,18.557346,73.809171,false))
 
         newAliens.add(Animals("Owlosaur", R.drawable.owl,"This alien looks like an owl. Holds 110 points",
-                150,18.525457,73.831927,false))
+                150,18.555992,73.809229,false))
 
         newAliens.add(Animals("Crocosaur", R.drawable.croco,"This alien looks like a crocodile. Holds 150 points",
-                150,18.526271,73.829995,false))
+                150,18.554863,73.807952,false))
 
         newAliens.add(Animals("Pandaosaur", R.drawable.pandu,"This alien looks like a panda. It is very difficult to find him. Holds 650 points.",
                 650,18.0,73.5,false))
